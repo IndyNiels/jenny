@@ -1,11 +1,17 @@
+import 'package:chat_gpt_02/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 import 'chat_screen.dart';
+import'auth_gate.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+   options: DefaultFirebaseOptions.currentPlatform,
+ );
   await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
@@ -22,9 +28,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.green)
-            .copyWith(background: const Color.fromARGB(255, 215, 226, 232)),
+            .copyWith(background: const Color.fromARGB(255, 255, 255, 255)),
+            textTheme: const TextTheme(
+              bodySmall: TextStyle(fontFamily: 'Poppins' ) 
+            )
       ),
-      home: const ChatScreen(),
+      // home: const ChatScreen(),
+      home : const AuthGate(), 
     );
   }
 }

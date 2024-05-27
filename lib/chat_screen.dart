@@ -1,7 +1,11 @@
+import 'dart:math';
+
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:velocity_x/velocity_x.dart';
+import 'package:flutter/material.dart';
 
 import 'chatmessage.dart';
 import 'threedots.dart';
@@ -15,9 +19,21 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _controller = TextEditingController();
-  final List<ChatMessage> _messages = [];
+  final List<ChatMessage> messages = [];
+  final List<String> chatMessages = [];
+
+  // a function to add {user: $role, content : $content} to the chatMessages list
 
   bool _isTyping = false;
+
+  final List<Map<String,dynamic>> requestMessages = [
+          {
+        "role": "system",
+        "content": """Act as a Cognitive Behavioural Therapist. 
+            Help me reassess my cognitive distortions and suggest some coping strategies. 
+            Ask me questions so that I arrive at my own answers. But be short and to the point."""
+      },
+  ];
 
   @override
   void initState() {
@@ -34,67 +50,70 @@ class _ChatScreenState extends State<ChatScreen> {
       baseOption: HttpSetup(receiveTimeout: const Duration(seconds: 15)),
       enableLog: true);
 
-  void _sendMessage() async {
-    if (_controller.text.isEmpty) return;
-    ChatMessage userMessage = ChatMessage(
-      text: _controller.text,
-      sender: "Me",
-      isImage: false,
-    );
-
-    setState(() {
-      _messages.insert(0, userMessage);
-      _isTyping = true;
-    });
-
-    final request = ChatCompleteText(messages: [
-      {
-        "role": "system",
-        "content":
-            """Act as a Cognitive Behavioural Therapist. Help me rephrase and reassess negative thoughts that I have. Ask me questions so that I arrive at my own answers."""
-      },
-      Map.of({"role": "user", "content": _controller.text})
-    ], maxToken: 400, model: Gpt4ChatModel(), user: 'indy');
-
-    _controller.clear();
-    print('request -> $request');
-
-    final response = await chat.onChatCompletion(request: request);
-
-    for (var element in response!.choices) {
-      print("data -> ${element.message?.content}");
-      insertNewData(element.message?.content ?? "");
-    }
-  }
-
-  void insertNewData(String response, {bool isImage = false}) {
-    ChatMessage botMessage = ChatMessage(
+  void insertAssistantMessage(String response, {bool isImage = false}) {
+    ChatMessage assistanttMessage = ChatMessage(
       text: response,
-      sender: "Alice",
+      sender: "assistant",
       isImage: isImage,
     );
 
     setState(() {
       _isTyping = false;
-      _messages.insert(0, botMessage);
+      messages.insert(0, assistanttMessage);
+      requestMessages.add({'role': 'assistant', 'content': response}); 
     });
+  }
+
+  void _sendMessage() async {
+    if (_controller.text.isEmpty) return;
+    ChatMessage userMessage = ChatMessage(
+      text: _controller.text,
+      sender: "User",
+      isImage: false,
+    );
+
+    final messageToPush = Map.of({'role': 'user', 'content': _controller.text});
+
+    setState(() {
+      //Adding message to paint
+      messages.insert(0, userMessage);
+      _isTyping = true;
+      //Addint message for request
+      requestMessages.add(messageToPush);
+    });
+
+    print('requestmesages is $requestMessages');
+
+    final request = ChatCompleteText(messages: requestMessages, maxToken: 400, model: Gpt4ChatModel(), user: 'indy');
+
+    //clenaing the controller text.
+    _controller.clear();
+
+    print('The request is ->$request');
+
+    final response = await chat.onChatCompletion(request: request);
+
+    for (var element in response!.choices) {
+      insertAssistantMessage(element.message?.content ?? "");
+    }
   }
 
   Widget buildTextComposer() {
     return Row(
       children: [
+        const SizedBox(width: 20,), 
         Expanded(
           child: TextField(
             controller: _controller,
             onSubmitted: (value) => _sendMessage(),
             decoration: const InputDecoration.collapsed(
-                hintText: "Question/description"),
+                hintText: "What's on your mind?"),
           ),
         ),
         ButtonBar(
           children: [
             IconButton(
-              icon: const Icon(Icons.send),
+              icon: const Icon(Icons.send_rounded),
               onPressed: () {
                 _sendMessage();
               },
@@ -102,34 +121,63 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
         ),
       ],
-    ).px16();
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-        appBar: AppBar(title: const Text("Alice, CBT Agent")),
+        appBar: AppBar(
+        title: const Text('Coach GPT'),
+         shape: const Border(bottom: BorderSide(color: Colors.black, width: 1.0)), 
+          actions: [
+          Title(color: Colors.blue, child: const Text('My Profile')),
+          IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<ProfileScreen>(
+                  builder: (context) => ProfileScreen(
+                    
+                    appBar: 
+                    // Go back to chat screen
+                    AppBar(
+                      title: const Text('My Profile'),
+                      actions: const [
+                      ],
+
+                  ),
+                ),
+              ));
+               
+            },
+          ),
+        ]),
         body: SafeArea(
           child: Column(
             children: [
               Flexible(
                   child: ListView.builder(
                 reverse: true,
-                padding: Vx.m8,
-                itemCount: _messages.length,
+                padding: const EdgeInsets.all(8.0),
+                itemCount: messages.length,
                 itemBuilder: (context, index) {
-                  return _messages[index];
+                  return messages[index];
                 },
               )),
               if (_isTyping) const ThreeDots(),
-              const Divider(
-                height: 1.0,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: context.cardColor,
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Container(
+                  width: screenWidth*0.95,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(28),
+                    color: const Color.fromRGBO(246, 246, 246,1),
+                  ),
+                  child: buildTextComposer(),
                 ),
-                child: buildTextComposer(),
               )
             ],
           ),

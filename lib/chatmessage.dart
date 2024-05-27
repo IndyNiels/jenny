@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class ChatMessage extends StatelessWidget {
   const ChatMessage(
@@ -17,14 +16,18 @@ class ChatMessage extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment:
-          sender == 'Alice' ? MainAxisAlignment.start : MainAxisAlignment.end,
-      children: [
+          sender == 'assistant' ? MainAxisAlignment.start : MainAxisAlignment.end,
+      children:  [
+        if (sender == "assistant") 
+        const CircleAvatar(radius: 32,
+        backgroundImage: AssetImage('assets/assistant.png'),), 
+        const SizedBox(width: 10), 
         BubleChat(sender: sender, text: text),
-        if (sender == "Alice") ...[
+        if (sender == "assistant") ...[
           const SizedBox(width: 64.0),
         ],
       ],
-    ).py8();
+    );
   }
 }
 
@@ -41,18 +44,24 @@ class BubleChat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Flexible(
-      child: Container(
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          color: sender == "Alice"
-              ? const Color.fromRGBO(254, 221, 216, 1)
-              : const Color.fromARGB(255, 234, 231, 226),
-          borderRadius: BorderRadius.circular(8.0),
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 16.0,
+      child: Padding(
+        padding : const EdgeInsets.symmetric(vertical: 5), 
+        child: Container(
+          padding: const EdgeInsets.all(16.0),
+          decoration: BoxDecoration(
+            color: sender == "assistant"
+                ? const Color.fromRGBO(233, 233, 233, 1)
+                : const Color.fromRGBO(208, 236, 232, 1),
+            borderRadius: sender == "assistant" ? 
+            const BorderRadius.only(topLeft: Radius.circular(27),topRight: Radius.circular(27), bottomLeft: Radius.circular(0), bottomRight:Radius.circular(27) )
+            : const BorderRadius.only(topLeft: Radius.circular(27),topRight: Radius.circular(27), bottomLeft: Radius.circular(27), bottomRight:Radius.circular(0) ),
+          ),
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: 16.0,
+              color: sender == "assistant" ?const Color.fromARGB(156, 0, 0, 0) :   const Color.fromRGBO(0, 118, 101, 100) 
+            ),
           ),
         ),
       ),
@@ -71,16 +80,8 @@ class speakerName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: sender == "Me" ? Vx.red200 : Vx.green200,
+      color: sender == "Me" ? const Color(0x00000000) : const Color(0x00000064) ,
       child: Text(sender)
-          .text
-          .make()
-          .box
-          .color(sender == "Me" ? Vx.red200 : Vx.green200)
-          .p16
-          .rounded
-          .alignCenter
-          .makeCentered(),
     );
   }
 }
