@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'chat_screen.dart';
-import'auth_gate.dart';
+import 'auth_gate.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
-   options: DefaultFirebaseOptions.currentPlatform,
- );
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
@@ -26,15 +26,12 @@ class MyApp extends StatelessWidget {
       title: 'ChatGPT Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.green)
-            .copyWith(background: const Color.fromARGB(255, 255, 255, 255)),
-            textTheme: const TextTheme(
-              bodySmall: TextStyle(fontFamily: 'Poppins' ) 
-            )
-      ),
+          useMaterial3: true,
+          // colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red),
+          textTheme:
+              const TextTheme(bodySmall: TextStyle(fontFamily: 'Poppins'))),
       // home: const ChatScreen(),
-      home : const AuthGate(), 
+      home: const AuthGate(),
     );
   }
 }

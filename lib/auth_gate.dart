@@ -18,7 +18,7 @@ class AuthGate extends StatelessWidget {
             headerMaxExtent: 300,
             maxWidth: 100,
             providers: [
-              // EmailAuthProvider(),
+              EmailAuthProvider(),
               GoogleProvider(
                   clientId:
                       '88461763705-lbste35triekssvnpti04fn4rcfi746j.apps.googleusercontent.com'),
@@ -76,37 +76,46 @@ class AuthGate extends StatelessWidget {
                                   insetPadding: const EdgeInsets.all(20),
                                   surfaceTintColor: Colors.white,
                                   elevation: 10,
-                                  title: 
-                                      const Text( 'Disclaimer and Terms of Agreement', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),),
-                                  content:  SizedBox(
-                                    width: MediaQuery.of(context).size.width * 0.9,
+                                  title: const Text(
+                                    'Disclaimer and Terms of Agreement',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 24),
+                                  ),
+                                  content: SizedBox(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.9,
                                     child: SingleChildScrollView(
-                                      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                        const Text('By using this application, you agree to the following terms:'),
-                                        const SizedBox(height: 16),
-                                        _buildListItem(
-                                          'Non-Professional Advice',
-                                          'You acknowledge that I am not a licensed psychologist, therapist, or healthcare professional. This application is not intended to replace any accredited professionals.',
-                                        ),
-                                        _buildListItem(
-                                          'No Liability',
-                                          'I cannot take responsibility for the results of your actions and any harm you suffer as a result of the use or misuse of the information presented by this app.',
-                                        ),
-                                        _buildListItem(                                 'Personal Responsibility',    
-                                          'You agree to use judgment and due diligence before taking any action or plan suggested by the app.',
-                                        ),
-                                        _buildListItem(
-                                          'Safety First',
-                                          'Do not use this app if you feel in danger to yourself or others. If you feel unwell, please seek the help of your loved ones or find professional help.',
-                                        ),
-                                        const SizedBox(height: 16),
-                                        const Text('By using this application, you accept and agree to abide by these terms and conditions.'),
-                                      ]),
+                                      child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Text(
+                                                'By using this application, you agree to the following terms:'),
+                                            const SizedBox(height: 16),
+                                            _buildListItem(
+                                              'Non-Professional Advice',
+                                              'You acknowledge that I am not a licensed psychologist, therapist, or healthcare professional. This application is not intended to replace any accredited professionals.',
+                                            ),
+                                            _buildListItem(
+                                              'No Liability',
+                                              'I cannot take responsibility for the results of your actions and any harm you suffer as a result of the use or misuse of the information presented by this app.',
+                                            ),
+                                            _buildListItem(
+                                              'Personal Responsibility',
+                                              'You agree to use judgment and due diligence before taking any action or plan suggested by the app.',
+                                            ),
+                                            _buildListItem(
+                                              'Safety First',
+                                              'Do not use this app if you feel in danger to yourself or others. If you feel unwell, please seek the help of your loved ones or find professional help.',
+                                            ),
+                                            const SizedBox(height: 16),
+                                            const Text(
+                                                'By using this application, you accept and agree to abide by these terms and conditions.'),
+                                          ]),
                                     ),
                                   ),
-
-
-                                                                      actions: [
+                                  actions: [
                                     TextButton(
                                       onPressed: () {
                                         Navigator.of(context).pop();
@@ -140,7 +149,6 @@ class AuthGate extends StatelessWidget {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 24),
                                   ),
-
                                   content: SingleChildScrollView(
                                     child: Column(
                                       crossAxisAlignment:
@@ -180,7 +188,6 @@ class AuthGate extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-
                                   actions: [
                                     TextButton(
                                       onPressed: () {
