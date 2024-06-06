@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/material.dart';
@@ -26,13 +27,13 @@ class _ChatScreenState extends State<ChatScreen> {
 
   bool _isTyping = false;
 
-  final List<Map<String,dynamic>> requestMessages = [
-          {
-        "role": "system",
-        "content": """Act as a Cognitive Behavioural Therapist. 
+  final List<Map<String, dynamic>> requestMessages = [
+    {
+      "role": "system",
+      "content": """Act as a Cognitive Behavioural Therapist. 
             Help me reassess my cognitive distortions and suggest some coping strategies. 
             Ask me questions so that I arrive at my own answers. But be short and to the point."""
-      },
+    },
   ];
 
   @override
@@ -60,7 +61,7 @@ class _ChatScreenState extends State<ChatScreen> {
     setState(() {
       _isTyping = false;
       messages.insert(0, assistanttMessage);
-      requestMessages.add({'role': 'assistant', 'content': response}); 
+      requestMessages.add({'role': 'assistant', 'content': response});
     });
   }
 
@@ -84,7 +85,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
     print('requestmesages is $requestMessages');
 
-    final request = ChatCompleteText(messages: requestMessages, maxToken: 400, model: Gpt4ChatModel(), user: 'indy');
+    final request = ChatCompleteText(
+        messages: requestMessages,
+        maxToken: 400,
+        model: Gpt4ChatModel(),
+        user: 'indy');
 
     //clenaing the controller text.
     _controller.clear();
@@ -101,9 +106,13 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget buildTextComposer() {
     return Row(
       children: [
-        const SizedBox(width: 20,), 
+        const SizedBox(
+          width: 20,
+        ),
         Expanded(
           child: TextField(
+            keyboardType: TextInputType.multiline,
+            maxLines: null,
             controller: _controller,
             onSubmitted: (value) => _sendMessage(),
             decoration: const InputDecoration.collapsed(
@@ -127,60 +136,60 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-        appBar: AppBar(
-        title: const Text('Coach GPT'),
-         shape: const Border(bottom: BorderSide(color: Colors.black, width: 1.0)), 
-          actions: [
-          Title(color: Colors.blue, child: const Text('My Profile')),
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute<ProfileScreen>(
-                  builder: (context) => ProfileScreen(
-                    
-                    appBar: 
-                    // Go back to chat screen
-                    AppBar(
-                      title: const Text('My Profile'),
-                      actions: const [
-                      ],
-
-                  ),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+          appBar: AppBar(
+              title: const Text('Coach GPT'),
+              shape: const Border(
+                  bottom: BorderSide(color: Colors.black, width: 1.0)),
+              actions: [
+                Title(color: Colors.blue, child: const Text('My Profile')),
+                IconButton(
+                  icon: const Icon(Icons.person),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute<ProfileScreen>(
+                          builder: (context) => ProfileScreen(
+                            appBar:
+                                // Go back to chat screen
+                                AppBar(
+                              title: const Text('My Profile'),
+                              actions: const [],
+                            ),
+                          ),
+                        ));
+                  },
                 ),
-              ));
-               
-            },
-          ),
-        ]),
-        body: SafeArea(
-          child: Column(
-            children: [
-              Flexible(
-                  child: ListView.builder(
-                reverse: true,
-                padding: const EdgeInsets.all(8.0),
-                itemCount: messages.length,
-                itemBuilder: (context, index) {
-                  return messages[index];
-                },
-              )),
-              if (_isTyping) const ThreeDots(),
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Container(
-                  width: screenWidth*0.95,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(28),
-                    color: const Color.fromRGBO(246, 246, 246,1),
+              ]),
+          body: SafeArea(
+            child: Column(
+              children: [
+                Flexible(
+                    child: ListView.builder(
+                  reverse: true,
+                  padding: const EdgeInsets.all(8.0),
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    return messages[index];
+                  },
+                )),
+                if (_isTyping) const ThreeDots(),
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Container(
+                    width: screenWidth * 0.95,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(28),
+                      color: const Color.fromRGBO(246, 246, 246, 1),
+                    ),
+                    child: buildTextComposer(),
                   ),
-                  child: buildTextComposer(),
-                ),
-              )
-            ],
-          ),
-        ));
+                )
+              ],
+            ),
+          )),
+    );
   }
 }

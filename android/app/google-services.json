@@ -22,6 +22,50 @@
           }
         },
         {
+          "client_id": "88461763705-v9oq8canpkktad2g4673siu5fg06rre4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chat_gpt_02",
+            "certificate_hash": "eb817db4d2ce9c1c5ff1d1981eac099b90fe95a3"
+          }
+        },
+        {
+          "client_id": "88461763705-lbste35triekssvnpti04fn4rcfi746j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTIKlNaRHOToCAvgGuI4wpCgZAfK3W-I8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "88461763705-lbste35triekssvnpti04fn4rcfi746j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "88461763705-6if585qc16k16kc1e40laa8jelm0v3hn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.chatGpt02"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:88461763705:android:018de8f5a710bd33ede0a8",
+        "android_client_info": {
+          "package_name": "com.therapist.mobile"
+        }
+      },
+      "oauth_client": [
+        {
           "client_id": "88461763705-lbste35triekssvnpti04fn4rcfi746j.apps.googleusercontent.com",
           "client_type": 3
         }

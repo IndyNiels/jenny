@@ -77,10 +77,7 @@ app.*.map.json
 /android/app/release
 /android/key.properties
 
-# Flutter
-# ...
 # iOS
-ios/Podfile.lock
 ios/firebase_app_id_file.json
 
 # Android
@@ -88,4 +85,3 @@ android/app/google-services.json
 
 # General
 build/
-*.lock
