@@ -11,6 +11,37 @@
 migrate_working_dir/
 .env
 
+
+## Avoid these file according to :
+# https://thoughtbot.com/blog/xcode-and-git-bridging-the-gap#:~:text=project.&text=pbxproj%20is%20an%20important%20file,pbxproj%20from%20version%20control.
+# OS X Finder
+.DS_Store
+
+# Xcode per-user config
+*.mode1
+*.mode1v3
+*.mode2v3
+*.perspective
+*.perspectivev3
+*.pbxuser
+*.xcworkspace
+xcuserdata
+
+# Build products
+build/
+*.o
+*.LinkFileList
+*.hmap
+
+# Automatic backup files
+*~.nib/
+*.swp
+*~
+*.dat
+*.dep
+## Finish avoid these file according to :..
+
+
 # IntelliJ related
 *.env
 *.iml
@@ -44,4 +75,17 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-/android/
+/android/key.properties
+
+# Flutter
+# ...
+# iOS
+ios/Podfile.lock
+ios/firebase_app_id_file.json
+
+# Android
+android/app/google-services.json
+
+# General
+build/
+*.lock
